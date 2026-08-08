@@ -6,159 +6,178 @@
 <title>A Hundred Thousand Billion Poems</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --board:#1d2a31;
-    --board-deep:#141d22;
-    --paper:#e9e3d3;
-    --paper-edge:#cfc6b1;
-    --ink:#25211b;
-    --ink-soft:#5d564a;
-    --stamp:#2f4a78;
-    --gilt:#c8a951;
-    --strip-h: 2.9rem;
+    --bg-base: #020617;
+    --card-bg: rgba(30, 41, 59, 0.4);
+    --card-hover: rgba(30, 41, 59, 0.7);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --text-primary: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent: #22d3ee;
+    --accent-glow: rgba(34, 211, 238, 0.4);
+    --strip-h: 3.4rem;
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
   body{
-    background:
-      radial-gradient(120% 80% at 50% -10%, #27373f 0%, var(--board) 45%, var(--board-deep) 100%);
-    color:var(--paper);
-    font-family:'Courier Prime',ui-monospace,monospace;
-    min-height:100vh;
-    padding:clamp(1rem,4vw,3rem) clamp(.6rem,3vw,2rem) 4rem;
-    -webkit-font-smoothing:antialiased;
+    background: var(--bg-base);
+    background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #020617 80%);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 2rem) 4rem;
+    -webkit-font-smoothing: antialiased;
   }
   .wrap{max-width:44rem;margin:0 auto}
 
   /* ---- header ---- */
   .eyebrow{
-    font-size:.68rem;letter-spacing:.34em;text-transform:uppercase;
-    color:var(--gilt);margin:0 0 .9rem;
+    font-size: .7rem; letter-spacing: .25em; text-transform: uppercase;
+    color: var(--accent); margin: 0 0 1rem; font-weight: 500;
   }
   h1{
-    font-family:'EB Garamond',Georgia,serif;
-    font-weight:400;font-size:clamp(2rem,7vw,3.1rem);
-    line-height:1.02;margin:0;letter-spacing:-.01em;
+    font-family: 'Playfair Display', serif;
+    font-weight: 400; font-size: clamp(2.5rem, 8vw, 3.8rem);
+    line-height: 1.05; margin: 0; letter-spacing: -0.02em;
   }
-  h1 em{font-style:italic;color:#f2ecdc}
+  h1 em{font-style: italic; color: var(--text-muted)}
   .sub{
-    margin:.9rem 0 0;font-size:.76rem;line-height:1.7;color:#9fb0b8;max-width:32rem;
+    margin: 1.2rem 0 0; font-size: 1rem; line-height: 1.6; color: var(--text-muted); max-width: 32rem;
   }
   .tally{
-    margin:1.6rem 0 1.9rem;padding:.55rem 0;
-    border-top:1px solid rgba(200,169,81,.35);
-    border-bottom:1px solid rgba(200,169,81,.35);
-    display:flex;justify-content:space-between;gap:1rem;align-items:baseline;
-    font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:#8ea0a8;
+    margin: 2rem 0 2rem; padding: .8rem 0;
+    border-top: 1px solid var(--card-border);
+    border-bottom: 1px solid var(--card-border);
+    display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;
+    font-size: .75rem; letter-spacing: .15em; text-transform: uppercase; color: var(--text-muted);
   }
-  .tally b{color:var(--gilt);font-weight:700;letter-spacing:.04em}
+  .tally b{color: var(--text-primary); font-weight: 600; letter-spacing: .05em; font-size: .9rem}
 
   /* ---- the book ---- */
   .book{
-    position:relative;
-    padding:.75rem 0 .75rem .9rem;
-    background:linear-gradient(90deg,#0f1519 0 .55rem,transparent .55rem);
-    border-radius:2px;
-  }
-  .book::before{ /* stitched spine */
-    content:"";position:absolute;left:.24rem;top:1.2rem;bottom:1.2rem;width:1px;
-    background:repeating-linear-gradient(to bottom,var(--gilt) 0 6px,transparent 6px 13px);
-    opacity:.55;
+    position: relative;
+    padding: .5rem 0 .5rem 0;
   }
   .strip{
-    position:relative;display:flex;align-items:stretch;
-    margin-bottom:3px;perspective:900px;
+    position: relative; display: flex; align-items: stretch;
+    margin-bottom: 6px; perspective: 1200px;
   }
   .face{
-    flex:1;display:flex;align-items:center;min-height:var(--strip-h);
-    background:linear-gradient(180deg,#efe9da 0%,var(--paper) 38%,#ded7c5 100%);
-    color:var(--ink);
-    border-left:3px solid #b9ae95;
-    box-shadow:0 1px 0 rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.6);
-    transform-origin:top center;backface-visibility:hidden;
-    cursor:pointer;border-radius:0 1px 1px 0;
-    transition:filter .18s ease;
+    flex: 1; display: flex; align-items: center; min-height: var(--strip-h);
+    background: var(--card-bg);
+    backdrop-filter: blur(8px);
+    color: var(--text-primary);
+    border: 1px solid var(--card-border);
+    border-radius: 6px 0 0 6px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transform-origin: top center; backface-visibility: hidden;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s ease, box-shadow 0.2s ease;
   }
-  .face:hover{filter:brightness(1.05)}
-  .face:focus-visible{outline:2px solid var(--gilt);outline-offset:2px;z-index:3}
-  .flip{animation:flip .46s cubic-bezier(.4,0,.2,1)}
+  .face:hover{
+    background: var(--card-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+  }
+  .face:focus-visible{outline: 2px solid var(--accent); outline-offset: 2px; z-index: 3}
+  
+  .flip{animation: flip 0.6s cubic-bezier(0.4, 0, 0.2, 1)}
   @keyframes flip{
-    0%{transform:rotateX(0deg)}
-    45%{transform:rotateX(-86deg);filter:brightness(.7)}
-    46%{transform:rotateX(86deg);filter:brightness(.7)}
-    100%{transform:rotateX(0deg)}
+    0%{transform: rotateX(0deg); filter: brightness(1)}
+    45%{transform: rotateX(-86deg); filter: brightness(0.3)}
+    46%{transform: rotateX(86deg); filter: brightness(0.3)}
+    100%{transform: rotateX(0deg); filter: brightness(1)}
   }
   .verse{
-    font-family:'EB Garamond',Georgia,serif;
-    font-size:clamp(.98rem,3.5vw,1.24rem);line-height:1.25;
-    padding:.35rem .6rem .35rem clamp(.7rem,3vw,1.3rem);
-    letter-spacing:.005em;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.1rem, 3.5vw, 1.4rem); line-height: 1.3;
+    padding: .35rem 1rem .35rem clamp(1rem, 3vw, 1.5rem);
   }
+  
   /* page-number tab on the right edge of every strip */
   .tab{
-    flex:0 0 2.6rem;display:flex;align-items:center;justify-content:center;
-    background:#ded7c5;color:var(--stamp);
-    border-left:1px dashed #b0a68d;
-    font-size:.8rem;font-weight:700;letter-spacing:.02em;
-    cursor:pointer;user-select:none;
-    box-shadow:0 1px 0 rgba(0,0,0,.45);
-    position:relative;
+    flex: 0 0 3.5rem; display: flex; align-items: center; justify-content: center;
+    background: rgba(15, 23, 42, 0.6);
+    color: var(--text-muted);
+    border: 1px solid var(--card-border);
+    border-left: none;
+    border-radius: 0 6px 6px 0;
+    font-size: .85rem; font-weight: 600;
+    cursor: pointer; user-select: none;
+    transition: all 0.2s ease;
   }
-  .tab:focus-visible{outline:2px solid var(--gilt);outline-offset:2px;z-index:3}
-  .tab[data-locked="true"]{background:var(--gilt);color:#1d2a31}
-  .tab[data-locked="true"]::after{
-    content:"";position:absolute;top:3px;right:4px;width:4px;height:4px;
-    border-radius:50%;background:#1d2a31;
+  .tab:hover{background: rgba(30, 41, 59, 0.8); color: var(--text-primary)}
+  .tab:focus-visible{outline: 2px solid var(--accent); outline-offset: 2px; z-index: 3}
+  .tab[data-locked="true"]{
+    background: var(--accent); color: #020617;
+    border-color: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
   }
   .rail{
-    display:flex;justify-content:space-between;
-    font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;
-    color:#7d8f97;padding:.5rem .2rem 0 .9rem;
+    display: flex; justify-content: space-between;
+    font-size: .65rem; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--text-muted); padding: .8rem .3rem 0 1rem;
+    font-weight: 500;
   }
 
   /* ---- controls ---- */
-  .controls{margin-top:1.8rem;display:flex;flex-wrap:wrap;gap:.6rem}
+  .controls{margin-top: 2.5rem; display: flex; flex-wrap: wrap; gap: 1rem}
   button.act{
-    font-family:inherit;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
-    padding:.85rem 1.3rem;border:1px solid var(--gilt);border-radius:1px;
-    background:transparent;color:var(--gilt);cursor:pointer;
-    transition:background .16s ease,color .16s ease;
+    font-family: inherit; font-size: .75rem; letter-spacing: .15em; text-transform: uppercase;
+    padding: 1rem 1.5rem; border: 1px solid var(--card-border); border-radius: 6px;
+    background: var(--card-bg); backdrop-filter: blur(8px);
+    color: var(--text-primary); cursor: pointer; font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   }
-  button.act:hover{background:var(--gilt);color:#162026}
-  button.act.primary{background:var(--gilt);color:#162026;font-weight:700}
-  button.act.primary:hover{background:#dcbc62}
-  button.act:focus-visible{outline:2px solid #fff;outline-offset:2px}
+  button.act:hover{
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+  }
+  button.act.primary{
+    background: var(--accent); color: #020617; border-color: var(--accent); font-weight: 600;
+  }
+  button.act.primary:hover{
+    background: #06b6d4; border-color: #06b6d4;
+    box-shadow: 0 0 15px var(--accent-glow);
+  }
+  button.act:focus-visible{outline: 2px solid var(--accent); outline-offset: 2px}
 
   .seedbox{
-    margin-top:1.5rem;border:1px solid rgba(255,255,255,.13);padding:.9rem 1rem;
-    border-radius:2px;background:rgba(0,0,0,.18);
+    margin-top: 2rem; padding: 1.5rem;
+    border: 1px solid var(--card-border); border-radius: 8px;
+    background: var(--card-bg); backdrop-filter: blur(8px);
   }
   .seedbox label{
-    display:block;font-size:.58rem;letter-spacing:.24em;text-transform:uppercase;
-    color:#8ea0a8;margin-bottom:.5rem;
+    display: block; font-size: .65rem; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: .8rem; font-weight: 500;
   }
-  .seedrow{display:flex;gap:.5rem;flex-wrap:wrap}
+  .seedrow{display: flex; gap: .8rem; flex-wrap: wrap}
   input#seed{
-    flex:1 1 15rem;min-width:0;font-family:inherit;font-size:.9rem;
-    background:transparent;border:none;border-bottom:1px solid rgba(200,169,81,.4);
-    color:var(--gilt);padding:.35rem 0;letter-spacing:.12em;
+    flex: 1 1 15rem; min-width: 0; font-family: 'Inter', monospace; font-size: 1rem;
+    background: rgba(0, 0, 0, 0.2); border: 1px solid var(--card-border); border-radius: 4px;
+    color: var(--accent); padding: .6rem 1rem; letter-spacing: .15em;
+    transition: border-color 0.2s ease;
   }
-  input#seed:focus{outline:none;border-bottom-color:var(--gilt)}
-  .hint{margin:.65rem 0 0;font-size:.62rem;color:#7d8f97;line-height:1.6}
+  input#seed:focus{outline: none; border-color: var(--accent)}
+  .hint{margin: .8rem 0 0; font-size: .75rem; color: var(--text-muted); line-height: 1.6}
   .colophon{
-    margin-top:2.6rem;padding-top:1.1rem;border-top:1px solid rgba(255,255,255,.1);
-    font-size:.62rem;line-height:1.8;color:#6f8189;
+    margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--card-border);
+    font-size: .8rem; line-height: 1.8; color: var(--text-muted);
   }
-  .colophon a{color:#93a6ae}
+  .colophon a{color: var(--text-primary); text-decoration: none; border-bottom: 1px solid var(--accent)}
+  .colophon a:hover{color: var(--accent)}
   @media (max-width:420px){
-    :root{--strip-h:2.6rem}
-    .tab{flex-basis:2.1rem;font-size:.72rem}
+    :root{--strip-h: 3rem}
+    .tab{flex-basis: 2.5rem; font-size: .8rem}
   }
   @media (prefers-reduced-motion:reduce){
-    .flip{animation:none}
-    *{transition:none!important}
+    .flip{animation: none}
+    *{transition: none!important}
   }
 </style>
 </head>
@@ -399,7 +418,7 @@ function render(animate, only){
       const card = faces[i].parentElement;
       card.classList.remove('flip');
       void card.offsetWidth;
-      card.style.animationDelay = (only === undefined ? i * 28 : 0) + 'ms';
+      card.style.animationDelay = (only === undefined ? i * 45 : 0) + 'ms';
       card.classList.add('flip');
     }
   }
