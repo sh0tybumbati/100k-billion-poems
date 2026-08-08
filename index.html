@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Hundred Thousand Billion Poems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --board:#1d2a31;
+    --board-deep:#141d22;
+    --paper:#e9e3d3;
+    --paper-edge:#cfc6b1;
+    --ink:#25211b;
+    --ink-soft:#5d564a;
+    --stamp:#2f4a78;
+    --gilt:#c8a951;
+    --strip-h: 2.9rem;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(120% 80% at 50% -10%, #27373f 0%, var(--board) 45%, var(--board-deep) 100%);
+    color:var(--paper);
+    font-family:'Courier Prime',ui-monospace,monospace;
+    min-height:100vh;
+    padding:clamp(1rem,4vw,3rem) clamp(.6rem,3vw,2rem) 4rem;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:44rem;margin:0 auto}
+
+  /* ---- header ---- */
+  .eyebrow{
+    font-size:.68rem;letter-spacing:.34em;text-transform:uppercase;
+    color:var(--gilt);margin:0 0 .9rem;
+  }
+  h1{
+    font-family:'EB Garamond',Georgia,serif;
+    font-weight:400;font-size:clamp(2rem,7vw,3.1rem);
+    line-height:1.02;margin:0;letter-spacing:-.01em;
+  }
+  h1 em{font-style:italic;color:#f2ecdc}
+  .sub{
+    margin:.9rem 0 0;font-size:.76rem;line-height:1.7;color:#9fb0b8;max-width:32rem;
+  }
+  .tally{
+    margin:1.6rem 0 1.9rem;padding:.55rem 0;
+    border-top:1px solid rgba(200,169,81,.35);
+    border-bottom:1px solid rgba(200,169,81,.35);
+    display:flex;justify-content:space-between;gap:1rem;align-items:baseline;
+    font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:#8ea0a8;
+  }
+  .tally b{color:var(--gilt);font-weight:700;letter-spacing:.04em}
+
+  /* ---- the book ---- */
+  .book{
+    position:relative;
+    padding:.75rem 0 .75rem .9rem;
+    background:linear-gradient(90deg,#0f1519 0 .55rem,transparent .55rem);
+    border-radius:2px;
+  }
+  .book::before{ /* stitched spine */
+    content:"";position:absolute;left:.24rem;top:1.2rem;bottom:1.2rem;width:1px;
+    background:repeating-linear-gradient(to bottom,var(--gilt) 0 6px,transparent 6px 13px);
+    opacity:.55;
+  }
+  .strip{
+    position:relative;display:flex;align-items:stretch;
+    margin-bottom:3px;perspective:900px;
+  }
+  .face{
+    flex:1;display:flex;align-items:center;min-height:var(--strip-h);
+    background:linear-gradient(180deg,#efe9da 0%,var(--paper) 38%,#ded7c5 100%);
+    color:var(--ink);
+    border-left:3px solid #b9ae95;
+    box-shadow:0 1px 0 rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.6);
+    transform-origin:top center;backface-visibility:hidden;
+    cursor:pointer;border-radius:0 1px 1px 0;
+    transition:filter .18s ease;
+  }
+  .face:hover{filter:brightness(1.05)}
+  .face:focus-visible{outline:2px solid var(--gilt);outline-offset:2px;z-index:3}
+  .flip{animation:flip .46s cubic-bezier(.4,0,.2,1)}
+  @keyframes flip{
+    0%{transform:rotateX(0deg)}
+    45%{transform:rotateX(-86deg);filter:brightness(.7)}
+    46%{transform:rotateX(86deg);filter:brightness(.7)}
+    100%{transform:rotateX(0deg)}
+  }
+  .verse{
+    font-family:'EB Garamond',Georgia,serif;
+    font-size:clamp(.98rem,3.5vw,1.24rem);line-height:1.25;
+    padding:.35rem .6rem .35rem clamp(.7rem,3vw,1.3rem);
+    letter-spacing:.005em;
+  }
+  /* page-number tab on the right edge of every strip */
+  .tab{
+    flex:0 0 2.6rem;display:flex;align-items:center;justify-content:center;
+    background:#ded7c5;color:var(--stamp);
+    border-left:1px dashed #b0a68d;
+    font-size:.8rem;font-weight:700;letter-spacing:.02em;
+    cursor:pointer;user-select:none;
+    box-shadow:0 1px 0 rgba(0,0,0,.45);
+    position:relative;
+  }
+  .tab:focus-visible{outline:2px solid var(--gilt);outline-offset:2px;z-index:3}
+  .tab[data-locked="true"]{background:var(--gilt);color:#1d2a31}
+  .tab[data-locked="true"]::after{
+    content:"";position:absolute;top:3px;right:4px;width:4px;height:4px;
+    border-radius:50%;background:#1d2a31;
+  }
+  .rail{
+    display:flex;justify-content:space-between;
+    font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;
+    color:#7d8f97;padding:.5rem .2rem 0 .9rem;
+  }
+
+  /* ---- controls ---- */
+  .controls{margin-top:1.8rem;display:flex;flex-wrap:wrap;gap:.6rem}
+  button.act{
+    font-family:inherit;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
+    padding:.85rem 1.3rem;border:1px solid var(--gilt);border-radius:1px;
+    background:transparent;color:var(--gilt);cursor:pointer;
+    transition:background .16s ease,color .16s ease;
+  }
+  button.act:hover{background:var(--gilt);color:#162026}
+  button.act.primary{background:var(--gilt);color:#162026;font-weight:700}
+  button.act.primary:hover{background:#dcbc62}
+  button.act:focus-visible{outline:2px solid #fff;outline-offset:2px}
+
+  .seedbox{
+    margin-top:1.5rem;border:1px solid rgba(255,255,255,.13);padding:.9rem 1rem;
+    border-radius:2px;background:rgba(0,0,0,.18);
+  }
+  .seedbox label{
+    display:block;font-size:.58rem;letter-spacing:.24em;text-transform:uppercase;
+    color:#8ea0a8;margin-bottom:.5rem;
+  }
+  .seedrow{display:flex;gap:.5rem;flex-wrap:wrap}
+  input#seed{
+    flex:1 1 15rem;min-width:0;font-family:inherit;font-size:.9rem;
+    background:transparent;border:none;border-bottom:1px solid rgba(200,169,81,.4);
+    color:var(--gilt);padding:.35rem 0;letter-spacing:.12em;
+  }
+  input#seed:focus{outline:none;border-bottom-color:var(--gilt)}
+  .hint{margin:.65rem 0 0;font-size:.62rem;color:#7d8f97;line-height:1.6}
+  .colophon{
+    margin-top:2.6rem;padding-top:1.1rem;border-top:1px solid rgba(255,255,255,.1);
+    font-size:.62rem;line-height:1.8;color:#6f8189;
+  }
+  .colophon a{color:#93a6ae}
+  @media (max-width:420px){
+    :root{--strip-h:2.6rem}
+    .tab{flex-basis:2.1rem;font-size:.72rem}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .flip{animation:none}
+    *{transition:none!important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="eyebrow">Cent mille milliards de poèmes · after Queneau, 1961</p>
+  <h1>A Hundred Thousand<br><em>Billion Poems</em></h1>
+  <p class="sub">Ten sonnets, each cut into fourteen strips. Any line may stand in for any other line in its position. Tap a line to turn just that strip; tap its page number to pin it in place.</p>
+
+  <div class="tally">
+    <span>Poems in this book</span>
+    <b>100,000,000,000,000</b>
+  </div>
+
+  <div class="book">
+    <div id="strips"></div>
+    <div class="rail"><span>Line</span><span>Page</span></div>
+  </div>
+
+  <div class="controls">
+    <button class="act primary" id="shuffle">Shuffle the pages</button>
+    <button class="act" id="unlock">Release all pins</button>
+    <button class="act" id="copy">Copy poem</button>
+  </div>
+
+  <div class="seedbox">
+    <label for="seed">Seed — the page numbers, read top to bottom</label>
+    <div class="seedrow">
+      <input id="seed" spellcheck="false" autocomplete="off" aria-describedby="seedhint">
+      <button class="act" id="go">Open</button>
+    </div>
+    <p class="hint" id="seedhint">Fourteen numbers from 1 to 10. Paste one in to reopen that exact poem — it also lives in this page's web address, so the link you share is the poem you saw.</p>
+  </div>
+
+  <p class="colophon">
+    The form is Raymond Queneau's. The verses are not: these are ten original sonnets written for this machine, rhyming ABAB ABAB CCD EED so that every one of the hundred trillion combinations scans and rhymes. Reading all of them aloud, at one minute each, takes a little over 190 million years.
+  </p>
+</div>
+
+<script>
+/* ---------- the ten sonnets, stored by line then by page ---------- */
+const LINES = [
+[ "the morning shrugs the harbor fog away,",
+  "a gull is stitching seams across the gray,",
+  "the tide has left its ledger on the bay,",
+  "the kiln has not forgiven us the clay,",
+  "nobody asked the river's name today,",
+  "the train agrees to one more slow delay,",
+  "the orchard practices a sweet decay,",
+  "the masts in the marina start to sway,",
+  "the shutters close and swallow up midday,",
+  "the almanac insists that this is May," ],
+[ "the lamps along the quay give up their light,",
+  "the radio is arguing all night,",
+  "the gulls have made the rooftops go all white,",
+  "nothing is promised to us but tonight,",
+  "the color drains and settles into twilight,",
+  "a rust-red freighter passes out of sight,",
+  "the starlings have rehearsed a single flight,",
+  "the scaffold reaches half the steeple's height,",
+  "not one of us remembers being right,",
+  "the bakery is warm at half past midnight," ],
+[ "and children in the courtyard start to play,",
+  "there is a thing the water tries to say,",
+  "whatever brought us here has ceased to stay,",
+  "the wind is pacing back and forth the doorway,",
+  "the letters that we mailed have gone astray,",
+  "the cranes above the docks perform ballet,",
+  "the rooftops hold antennas in array,",
+  "the town pretends that this is holiday,",
+  "the ivy has adopted the old archway,",
+  "the papers on my desk are in disarray," ],
+[ "the evening isn't finished with us quite,",
+  "the old machinery still runs on delight,",
+  "the bottles on the sill collect the moonlight,",
+  "we broke our bread and talked by candlelight,",
+  "the chimneys of the district stand upright,",
+  "there is a silence here we can't invite,",
+  "the seams of morning and the sea unite,",
+  "the tram conductor stops here to recite,",
+  "a gull, a wire, a chimney — call it insight,",
+  "the rain comes down insistent and polite," ],
+[ "some other version of us keeps the day,",
+  "the harbor has no orders to obey,",
+  "the photographs are learning to betray,",
+  "the weather turns and no one shows dismay,",
+  "there's more the tide intends but can't convey,",
+  "we keep the door unlocked for yesterday,",
+  "the bridge gives up its argument halfway,",
+  "the lighthouse takes the darkness in survey,",
+  "the junk shop sets its clocks out on display,",
+  "two streets away, a shuttered cabaret," ],
+[ "the evening does whatever evening might,",
+  "the rigging in the wind is drawn up tight,",
+  "the difference between us here is slight,",
+  "the roses in the alley grow from spite,",
+  "one careless match and all the docks ignite,",
+  "the sea has kept its salt and appetite,",
+  "the washing on the line is stiff with sunlight,",
+  "we built the whole arrangement on oversight,",
+  "a moth is doing business with the streetlight,",
+  "the shutters hold their quarrel with the daylight," ],
+[ "and nothing in this city knows the way,",
+  "the fishermen no longer stop to pray,",
+  "a dog from the old quarter, thin and stray,",
+  "the breakwater is white with cold sea spray,",
+  "there is a grief the ledger cannot weigh,",
+  "the flag above the customs starts to fray,",
+  "beneath the tar the older cobbles lay,",
+  "the season has decided we are prey,",
+  "the barges carry salt and rope and hay,",
+  "the lighthouse and the buoy run their relay," ],
+[ "a child has lost the string of a red kite,",
+  "the window of the chandler's shop is bright,",
+  "the frost has given every root a bite,",
+  "we recognized each other by our plight,",
+  "the city is a draft we can't rewrite,",
+  "the past is packed and shipped like dynamite,",
+  "the rain is keeping time on the skylight,",
+  "a cold and patient eye — some satellite,",
+  "the church bell sounds unhurried, not contrite,",
+  "the gas lamps on the terrace are alight," ],
+[ "say it again: the harbor is all stone,",
+  "nobody in this weather is alone,",
+  "the winter finds the old wound in the bone,",
+  "whatever we were promised, it was known,",
+  "the moss between the paving stones has grown,",
+  "the nets are mended, salted, dried, and thrown,",
+  "there is a kind of quiet you can own,",
+  "the bells across the water change their tone,",
+  "the hinges of the boathouse start to moan,",
+  "each face along the seawall is unknown," ],
+[ "and everything we hid is finally shown.",
+  "nobody here is waiting for the phone.",
+  "the freezer in the fish house starts to drone.",
+  "the timbers of the old pier shift and groan.",
+  "the light is borrowed, given as a loan.",
+  "the awnings of the market street are blown.",
+  "the season and the swallows both have flown.",
+  "there isn't any error to atone.",
+  "they laid the salt, the shell, the cornerstone.",
+  "whatever ruled us here has been overthrown." ],
+[ "The gutters do their arithmetic of rain,",
+  "And none of it will happen twice again,",
+  "Of all the summer, only ropes remain,",
+  "The truth of it is ordinary, plain:",
+  "The anchor sleeps at the end of its chain,",
+  "The tide comes in and keeps its old refrain,",
+  "A gull can read this whole flat gray terrain,",
+  "There's nothing in the ledger to explain,",
+  "There is a kind of hunger we sustain,",
+  "The miracle is stubbornly mundane:" ],
+[ "and still we are not finished with the sea,",
+  "nothing that leaves this harbor leaves it free,",
+  "the wind is in the courtyard's only tree,",
+  "the landlord has been asking for the key,",
+  "the clock above the customs house strikes three,",
+  "the cold has come down one more slow degree,",
+  "not even the two gulls will quite agree,",
+  "the morning tide brings back its own debris,",
+  "the starlings take the evening on a spree,",
+  "the weather posts its usual decree:" ],
+[ "that what we made was more than we could see,",
+  "there's nothing on the water here for me,",
+  "whatever we were then, we ceased to be,",
+  "the last of the small boats prepares to flee,",
+  "the water at the steps is at my knee,",
+  "the lighthouse blinks a patient, cold-eyed plea,",
+  "the kettle and the cat are full of glee,",
+  "somebody has been singing on the quay,",
+  "the rain is writing on the bright marquee,",
+  "for none of this was sold with guarantee," ],
+[ "and none of it, not even this, was pain.",
+  "we will not make the last, the northbound train.",
+  "the tide goes out and leaves a silver stain.",
+  "the lamps come on along the crooked lane.",
+  "the gulls go up and come back down in vain.",
+  "let this be all the country where we reign.",
+  "the winter is a patient long campaign.",
+  "there is more harbor here than we contain.",
+  "the shutters and the seagulls both complain.",
+  "we were the weather. we were the hurricane." ]
+];
+
+const N_LINES = 14, N_PAGES = 10;
+const stripsEl = document.getElementById('strips');
+const seedEl = document.getElementById('seed');
+
+let pages  = Array.from({length:N_LINES}, () => Math.floor(Math.random()*N_PAGES));
+let locked = Array(N_LINES).fill(false);
+
+/* ---------- build the strips once ---------- */
+const faces = [], tabs = [];
+for (let i = 0; i < N_LINES; i++){
+  const strip = document.createElement('div');
+  strip.className = 'strip';
+
+  const face = document.createElement('div');
+  face.className = 'face';
+  face.tabIndex = 0;
+  face.setAttribute('role','button');
+  face.setAttribute('aria-label', `Line ${i+1}. Turn to the next page.`);
+  face.innerHTML = `<span class="verse"></span>`;
+  face.addEventListener('click', () => turn(i));
+  face.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); turn(i); }
+  });
+
+  const tab = document.createElement('div');
+  tab.className = 'tab';
+  tab.tabIndex = 0;
+  tab.setAttribute('role','button');
+  tab.dataset.locked = 'false';
+  tab.addEventListener('click', () => togglePin(i));
+  tab.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); togglePin(i); }
+  });
+
+  strip.append(face, tab);
+  stripsEl.append(strip);
+  faces.push(face.querySelector('.verse'));
+  tabs.push(tab);
+}
+
+/* ---------- rendering ---------- */
+function seedString(){
+  return pages.map(p => String(p+1).padStart(2,'0')).join(' ');
+}
+function render(animate, only){
+  for (let i = 0; i < N_LINES; i++){
+    faces[i].textContent = LINES[i][pages[i]];
+    tabs[i].textContent  = pages[i] + 1;
+    tabs[i].dataset.locked = locked[i] ? 'true' : 'false';
+    tabs[i].setAttribute('aria-label',
+      `Line ${i+1} is on page ${pages[i]+1}. ${locked[i] ? 'Pinned. Release it.' : 'Pin this page.'}`);
+    if (animate && (only === undefined || only === i)){
+      const card = faces[i].parentElement;
+      card.classList.remove('flip');
+      void card.offsetWidth;
+      card.style.animationDelay = (only === undefined ? i * 28 : 0) + 'ms';
+      card.classList.add('flip');
+    }
+  }
+  seedEl.value = seedString();
+  history.replaceState(null,'','#' + pages.map(p=>p+1).join('-'));
+}
+
+/* ---------- actions ---------- */
+function shuffle(){
+  for (let i = 0; i < N_LINES; i++){
+    if (locked[i]) continue;
+    let next = Math.floor(Math.random()*N_PAGES);
+    if (next === pages[i]) next = (next + 1 + Math.floor(Math.random()*(N_PAGES-1))) % N_PAGES;
+    pages[i] = next;
+  }
+  render(true);
+}
+function turn(i){
+  if (locked[i]) return;
+  pages[i] = (pages[i] + 1) % N_PAGES;
+  render(true, i);
+}
+function togglePin(i){
+  locked[i] = !locked[i];
+  render(false);
+}
+function readSeed(text){
+  const nums = (text.match(/\d+/g) || []).map(Number).filter(n => n >= 1 && n <= 10);
+  if (nums.length !== N_LINES) return false;
+  pages = nums.map(n => n - 1);
+  render(true);
+  return true;
+}
+
+document.getElementById('shuffle').addEventListener('click', shuffle);
+document.getElementById('unlock').addEventListener('click', () => {
+  locked = Array(N_LINES).fill(false); render(false);
+});
+document.getElementById('go').addEventListener('click', () => {
+  if (!readSeed(seedEl.value)){
+    seedEl.value = seedString();
+    document.getElementById('seedhint').textContent =
+      'That seed needs exactly fourteen numbers, each between 1 and 10. Restored the poem on screen.';
+  } else {
+    document.getElementById('seedhint').textContent =
+      'Fourteen numbers from 1 to 10. Paste one in to reopen that exact poem — it also lives in this page\u2019s web address, so the link you share is the poem you saw.';
+  }
+});
+seedEl.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('go').click(); });
+
+document.getElementById('copy').addEventListener('click', async e => {
+  const text = pages.map((p,i) => LINES[i][p]).join('\n') + '\n\n— seed ' + seedString();
+  try { await navigator.clipboard.writeText(text); e.target.textContent = 'Copied'; }
+  catch { e.target.textContent = 'Copy blocked'; }
+  setTimeout(() => e.target.textContent = 'Copy poem', 1600);
+});
+
+if (!readSeed(location.hash.slice(1))) render(false);
+</script>
+</body>
+</html>
